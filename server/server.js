@@ -23,7 +23,7 @@ app.use(cors());
 
 const io = new Server(server, {
     cors: {
-        origin: "https://satsquiz.vercel.app/",
+        origin: "https://satsquiz.vercel.app",
         methods: ["GET", "POST"]
     }
 });
