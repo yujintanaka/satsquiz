@@ -9,7 +9,7 @@ import Payout from './Components/Payout'
 import QRcode from 'qrcode';
 
 
-const socket = io('http://localhost:3000/')
+const socket = io('https://satsquiz.onrender.com/')
 
 export type Invoice = {
   payment_hash: string,

@@ -14,12 +14,20 @@ const SATS_PER_QUESTION  = 400;
 
 // express
 app.use(cors());
+// const io = new Server(server, {
+//     cors: {
+//         origin: "http://localhost:5173",
+//         methods: ["GET", "POST"]
+//     }
+// });
+
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: "https://satsquiz.vercel.app/",
         methods: ["GET", "POST"]
     }
 });
+
 
 //set up API for calling to specific room with payment message.
 app.post('/', (req, res)=>{
