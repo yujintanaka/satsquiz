@@ -18,12 +18,12 @@ type Player = {
 const Scoreboard: React.FC<Props> = ({players, isHost, callback, questionNumber, totalQuestions}) => {
   const playersArray = Object.keys(players).map(key=>players[key])
   return (
-    <div>
-        <h1>Leaderboards</h1>
+    <div className='card'>
+        <h1>Scoreboard</h1>
         {playersArray.map((player)=> {
         return <h2 key={player.id}>{player.displayName} score: {player.score}</h2>
         })}
-        {isHost && <button onClick={callback}>{questionNumber===totalQuestions ? 'Finish Game' : 'Next Question'}</button>}
+        {isHost && <button className='button-5' onClick={callback}>{questionNumber===totalQuestions ? 'Finish Game' : 'Next Question'}</button>}
     </div>
   )
 }

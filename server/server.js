@@ -10,10 +10,11 @@ const {makeid} = require('./utils')
 const {questions, initGame, initPlayer, initQuestions} = require('./game.js')
 const {createInvoice, checkInvoice, createWithdraw} = require('./payments')
 
-const SATS_PER_QUESTION  = 400;
+const SATS_PER_QUESTION  = process.env.SATS_PER_QUESTION;
+const TIME_PER_QUESTION = 25000;
 
 // express
-app.use(cors());
+// app.use(cors());
 // const io = new Server(server, {
 //     cors: {
 //         origin: "http://localhost:5173",
@@ -27,17 +28,6 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
-
-
-//set up API for calling to specific room with payment message.
-app.post('/', (req, res)=>{
-    res.send({message: `OK`})
-    console.log(req.body.webhook)
-})
-app.post('/:room', (req, res)=>{
-    res.send({message: `OK`})
-    io.to(req.params.room).emit('invoice-paid')
-})
 
 server.listen(PORT, ()=>{
     console.log(`express server listening on port: ${PORT}`)
@@ -66,8 +56,8 @@ io.on('connection', client =>{
 
     function handleCreateWithdraw(room){
         for (player in state[room].players){
-            // createWithdraw(state[room].players[player].score, player, sendWithdraw);
-            createWithdraw(25, player, sendWithdraw);
+            createWithdraw(state[room].players[player].score, player, sendWithdraw);
+            // createWithdraw(25, player, sendWithdraw);
         }
     }
 
@@ -86,15 +76,15 @@ io.on('connection', client =>{
     function handleFinishGame(room){
         //send players to the payout page
         //send the client to payment screen
-        let amount = 25;
-
-        // let amount = 0;
-        // for(player in state[room].players){
-        //     amount += state[room].players[player].score
-        // }
+        let amount = 0;
+        let numberOfPlayers = 0;
+        for(player in state[room].players){
+            numberOfPlayers +=1;
+            amount += state[room].players[player].score
+        }
 
         io.to(room).emit('payout-page')
-        createInvoice(amount, room, sendInvoice);
+        createInvoice(amount, room, sendInvoice, numberOfPlayers);
     }
 
     function handleNextQuestion(room){
@@ -110,7 +100,7 @@ io.on('connection', client =>{
             if(questionNumber === state[room].questionNumber){
                 endQuestion(room)
             }
-        },30000)
+        },TIME_PER_QUESTION)
     }
     function handleSaveAnswer(answerObject, room){
         state[room].players[client.id].userAnswers.push(answerObject);
@@ -169,7 +159,7 @@ io.on('connection', client =>{
 
     function handleStartGame(room){
         //replace temp with questions
-        const questionState = initQuestions(questionsTemp)
+        const questionState = initQuestions(questions)
         io.to(room).emit('game-started', questionState)
         console.log(`Game Started at room:${room} ${state[room]}`)
     }
@@ -195,17 +185,3 @@ io.on('connection', client =>{
         client.join(room)
     }
 })
-
-
-const questionsTemp = [{
-    id: 1,
-    question: 'What is the only cause of sustained long-term inflation?',
-    correct_answer: 'Expansion of the money supply',
-    incorrect_answer: ['Corporate Greed', 'Wage Increases', 'Supply Chain Issues']
-},
-{
-    id: 2,
-    question: "What is closest the current US GDP? (Measure of value created in a year) ",
-    correct_answer: '25 Trillion Dollars',
-    incorrect_answer: ['50 Trillion Dollars', '10 Trillion Dollars', '5 Trillion Dollars']
-},];

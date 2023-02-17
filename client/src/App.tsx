@@ -10,6 +10,8 @@ import QRcode from 'qrcode';
 
 
 const socket = io('https://satsquiz.onrender.com/')
+// const socket = io('http://localhost:3000/');
+
 
 export type Invoice = {
   payment_hash: string,
@@ -74,6 +76,7 @@ function App() {
   const [disable, setDisable] = useState(false);
   const [paymentHash, setPaymentHash] = useState('');
   const [QRCODE, setQRCODE] = useState('');
+  const [invoiceURL, setInvoiceURL] = useState('');
   const [paid, setPaid] = useState(false);
 
   const createGame = (e:React.MouseEvent) => {
@@ -112,6 +115,7 @@ function App() {
     setReserve(answerObject);
   }
   function generateQRCode(url:string) {
+    setInvoiceURL(url);
     QRcode.toDataURL(url, (err, url)=>{
       if(err){
         return console.log(err)
@@ -241,12 +245,19 @@ function App() {
     <div className="App">
       {page === "HOME" && (
         <>
-        <button onClick={createGame}>Create Game</button>
-        <form onSubmit={joinGame}>
-          <input placeholder="enter room"type="text" value={roomInput} onChange={(e)=>setRoomInput(e.target.value)}/>
-          <input placeholder='enter name' type="text" value={nameInput} onChange={(e)=>setNameInput(e.target.value)}/>
-          <button type='submit'>Join Game</button>
-        </form>
+        <h1>SatsQuiz</h1>
+        <div className='card'>
+          <h2>Start a New Game</h2>
+          <button className='button-5' onClick={createGame}>Create Game</button>
+          <h2>Join Existing Game</h2>
+          <form onSubmit={joinGame} className={'form'}>
+            <label htmlFor="RoomPIN">Room PIN</label>
+            <input id={'RoomPIN'}placeholder="enter room"type="text" value={roomInput} onChange={(e)=>setRoomInput(e.target.value)}/>
+            <label htmlFor="RoomPIN">Name</label>
+            <input placeholder='enter name' type="text" value={nameInput} onChange={(e)=>setNameInput(e.target.value)}/>
+            <button className='button-5' type='submit'>Join Game</button>
+          </form>
+        </div>
         </>
       )}
       {page === "LOBBY" && <Lobby players={gameState.players} room={room} isHost={isHost} callback={startGame}/>}
@@ -268,7 +279,7 @@ function App() {
         players={gameState.players} 
         room={room} isHost={isHost} 
         callback={nextQuestion}/> }
-      {page === 'PAYOUT' && <Payout paid={paid} isHost={isHost} QRCODE={QRCODE} checkInvoice={checkInvoice}/>}
+      {page === 'PAYOUT' && <Payout invoiceURL={invoiceURL} paid={paid} isHost={isHost} QRCODE={QRCODE} checkInvoice={checkInvoice}/>}
     </div>
   )
 }

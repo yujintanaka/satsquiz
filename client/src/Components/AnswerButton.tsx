@@ -12,14 +12,20 @@ type Props = {
 }
 
 const AnswerButton: React.FC<Props> = ({userAnswer, answer, callback, correct, userClicked, disable}) => {
-    let className = '';
-    if(!correct && userClicked) {
-        className = 'incorrect'
-    } else if(correct) {
-        className ='correct'
+    const [classes, setClasses] = useState('button-28')
+    useEffect(()=>{
+        if(!correct && userClicked) {
+            setClasses('incorrect button-28')
+        } else if(correct) {
+            setClasses('correct button-28')
+        }
+    }, [userAnswer])
+    function clickedOn(e:React.MouseEvent<HTMLButtonElement>){
+        callback(e);
+        setClasses('clickedOn button-28')
     }
   return (
-    <button className={className} disabled={disable} value={answer} onClick={callback}>
+    <button className={classes} disabled={disable} value={answer} onClick={clickedOn}>
         <span dangerouslySetInnerHTML={{__html: answer}}></span>
     </button>
   )

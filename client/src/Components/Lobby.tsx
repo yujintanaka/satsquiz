@@ -17,12 +17,12 @@ type Player = {
 const Lobby: React.FC<Props> = ({players, room, isHost, callback}) => {
   const playersArray = Object.keys(players).map(key=>players[key])
   return (
-    <div>
+    <div className='card'>
         <h1>Your Game Code is: {room}</h1>
         {playersArray.map((player)=> {
         return <h2 key={player.id}>{player.displayName}</h2>
         })}
-        {isHost && <button onClick={callback}>Start Game</button>}
+        {isHost && <button className='button-5'onClick={callback}>Start Game</button>}
     </div>
   )
 }

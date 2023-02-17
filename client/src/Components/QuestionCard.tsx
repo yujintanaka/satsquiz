@@ -17,12 +17,12 @@ type Props = {
 
 const QuestionCard: React.FC<Props> = ({question, answers, callback, userAnswer, questionNumber, totalQuestions, disable, isHost, toScoreboard}) => {
   return (
-    <>
-      <p className="number">
+    <div className='card'>
+      <h3 className="number">
           Question: {questionNumber} / {totalQuestions}
-      </p>
+      </h3>
       <p dangerouslySetInnerHTML={{__html: question}}></p>
-      <div>
+      <div className='questions'>
           {answers.map(answer=>{
               return(
                   <AnswerButton
@@ -36,9 +36,9 @@ const QuestionCard: React.FC<Props> = ({question, answers, callback, userAnswer,
                   />
                 )
           })}
-          {isHost && disable && <button onClick={toScoreboard}>Results</button>}
+          {isHost && disable && <button className='button-5' onClick={toScoreboard}>Results</button>}
       </div>
-    </>
+    </div>
   )
 }
 
