@@ -90,8 +90,15 @@ function App() {
       setNameInput('');
       return;
     }
+    if(nameInput.length > 30){
+      alert('please keep your name under 30 characters');
+      setRoomInput('');
+      setNameInput('');
+      return;
+    }
     e.preventDefault();
-    socket.emit('join-game', roomInput, nameInput)
+    const trimmedInput = roomInput.trim().toUpperCase()
+    socket.emit('join-game', trimmedInput, nameInput)
   }
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
     if(isHost){
@@ -252,7 +259,7 @@ function App() {
           <h2>Join Existing Game</h2>
           <form onSubmit={joinGame} className={'form'}>
             <label htmlFor="RoomPIN">Room PIN</label>
-            <input id={'RoomPIN'}placeholder="enter room"type="text" value={roomInput} onChange={(e)=>setRoomInput(e.target.value)}/>
+            <input className='room-input' id={'RoomPIN'}placeholder="enter room"type="text" value={roomInput} onChange={(e)=>setRoomInput(e.target.value)}/>
             <label htmlFor="RoomPIN">Name</label>
             <input placeholder='enter name' type="text" value={nameInput} onChange={(e)=>setNameInput(e.target.value)}/>
             <button className='button-5' type='submit'>Join Game</button>
