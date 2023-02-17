@@ -13,21 +13,16 @@ const {createInvoice, checkInvoice, createWithdraw} = require('./payments')
 const SATS_PER_QUESTION  = process.env.SATS_PER_QUESTION;
 const TIME_PER_QUESTION = 25000;
 
-// express
-// app.use(cors());
-// const io = new Server(server, {
-//     cors: {
-//         origin: "http://localhost:5173",
-//         methods: ["GET", "POST"]
-//     }
-// });
+express
+app.use(cors());
 
 const io = new Server(server, {
     cors: {
-        origin: "https://satsquiz.vercel.app",
+        origin: process.env.CORS_PERMISSION,
         methods: ["GET", "POST"]
     }
 });
+
 
 server.listen(PORT, ()=>{
     console.log(`express server listening on port: ${PORT}`)

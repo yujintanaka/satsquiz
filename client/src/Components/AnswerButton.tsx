@@ -19,7 +19,7 @@ const AnswerButton: React.FC<Props> = ({userAnswer, answer, callback, correct, u
         } else if(correct) {
             setClasses('correct button-28')
         }
-    }, [userAnswer])
+    }, [userAnswer, answer, correct, userClicked, disable])
     function clickedOn(e:React.MouseEvent<HTMLButtonElement>){
         callback(e);
         setClasses('clickedOn button-28')
